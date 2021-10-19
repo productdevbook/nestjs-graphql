@@ -23,8 +23,14 @@
   },
   "dependencies": {
     "@nestjs/common": "8.1.1",
+    "@nestjs/config": "1.0.2",
     "@nestjs/core": "8.1.1",
+    "@nestjs/graphql": "9.0.6",
     "@nestjs/platform-express": "8.1.1",
+    "apollo-server-express": "3.4.0",
+    "class-transformer": "0.4.0",
+    "class-validator": "0.13.1",
+    "graphql": "15.6.1",
     "reflect-metadata": "0.1.13",
     "rimraf": "3.0.2",
     "rxjs": "7.4.0"
@@ -67,5 +73,8 @@
     ],
     "coverageDirectory": "../coverage",
     "testEnvironment": "node"
+  },
+  "engines": {
+    "node": "^14.18.0"
   }
 }
