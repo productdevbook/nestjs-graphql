@@ -34,3 +34,7 @@ lerna-debug.log*
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
+
+# JWT Keys
+jwtRS256.key
+jwtRS256.key.pub
