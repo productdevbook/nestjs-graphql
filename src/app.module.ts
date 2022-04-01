@@ -4,34 +4,9 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ApolloServerPluginInlineTrace } from 'apollo-server-core';
-import { GraphQLError, GraphQLFormattedError } from 'graphql';
-import { isArray } from 'class-validator';
-
 import { AuthModule } from './modules/auth/auth.module';
 import { AppResolver } from './app.resolver';
-
-const gqlErrorFormatter = (error: GraphQLError) => {
-  if (error.extensions.response && isArray(error.extensions.response.message)) {
-    const extensions = {
-      code: error.extensions.response.statusCode,
-      errors: error.extensions.response.message,
-    };
-
-    const graphQLFormattedError: GraphQLFormattedError = {
-      message: error.extensions.code,
-      extensions: extensions,
-    };
-    return graphQLFormattedError;
-  } else {
-    console.log(error.message);
-    const graphQLFormattedError: GraphQLFormattedError = {
-      message: error.message,
-      extensions: error.extensions,
-    };
-    return graphQLFormattedError;
-  }
-};
-
+import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 
 @Module({
   imports: [
@@ -43,7 +18,10 @@ const gqlErrorFormatter = (error: GraphQLError) => {
           : ['.env.development.local', '.env.development', '.env'],
       isGlobal: true,
     }),
-    GraphQLModule.forRootAsync({
+    GraphQLModule.forRootAsync<ApolloDriverConfig>({
+      driver: ApolloDriver,
+      imports: [ConfigModule],
+      inject: [ConfigService],
       useFactory: async (configService: ConfigService) => {
         return {
           installSubscriptionHandlers: true,
@@ -63,14 +41,11 @@ const gqlErrorFormatter = (error: GraphQLError) => {
           debug: configService.get('GRAPHQL_DEBUG') || true,
           playground: configService.get('GRAPHQL_PLAYGROUND') || true,
           context: ({ req }) => ({ req }),
-          formatError: (error: GraphQLError) => gqlErrorFormatter(error),
-
         };
       },
-      inject: [ConfigService],
     }),
   ],
   controllers: [AppController],
   providers: [AppService, AppResolver],
 })
-export class AppModule { }
+export class AppModule {}
