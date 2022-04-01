@@ -75,7 +75,7 @@
     "testEnvironment": "node"
   },
   "engines": {
-    "node": "^14.18.0 || ^16.11.0"
+    "node": "^16.11.0"
   },
   "packageManager": "yarn@3.2.0"
 }
